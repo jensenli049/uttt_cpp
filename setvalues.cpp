@@ -17,16 +17,6 @@ void Reset_Values(char main[9][9], char free[9]){
         free[i] = ' ';
 }
 
-void Set_Small(char small[9], int index, char player){
-    small[index] = player;
-}
-
-bool Check_Unused_Space(char small[9], int index){
-    if(small[index] != 'x' && small[index] != 'o' && small[index] != '-')
-        return true;
-    return false;
-}
-
 void Set_Board_Winner(char main[9][9], char free[9]){
     Unpopulate(free);
     for(int i = 0; i < 9; i++){
