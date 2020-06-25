@@ -2,7 +2,7 @@
 // Title: Ultimate Tic Tac Toe
 // Developer: Jensen Li
 // Date: June 22, 2020
-// Description: Set Board Functions
+// Description: Set Values Functions
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 #include "ultimatetictactoe.h"
