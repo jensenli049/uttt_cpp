@@ -7,15 +7,6 @@
 
 #include "ultimatetictactoe.h"
 
-/*
-AI is 'o'
-Check freebie
-Check valid places
-Place piece
-Evaluate minimax
-Recursive minimax
-*/
-
 int Evaluate_Board(char freebie[9], char current[9]){
     // Checks for game over
     switch (Check_Win(freebie)){
@@ -34,24 +25,24 @@ int Evaluate_Board(char freebie[9], char current[9]){
 
 int MiniMax(char main[9][9], char freebie[9], char current[9], bool ai, int score, int depth){
     // Limit search depth
-    if(depth > 3)
+    if(depth > 2)
         return score;
     
     // Make a copy of current board state
     char temp_main[9][9];
     char temp_freebie[9];
-    copy(&main, &main+81, temp_main);
-    copy(&freebie, &freebie+9, temp_freebie);
+    copy(&main[0][0], &main[9][9], &temp_main[0][0]);
+    copy(&freebie[0], &freebie[9], &temp_freebie[0]);
 
     // In the case of a freebie, evaluate every freebie square
-    if(Check_Win(current) != ' ')
+    if(Check_Win(current) != ' '){
         for(int i = 0; i < 9; i++){
             if(freebie[i] == ' ' && ai)
                 MiniMax(main, freebie, main[i], ai, score-50, depth);
             else
                 MiniMax(main, freebie, main[i], ai, score+50, depth);
         }
-    
+    }
     // Normal turn
     if(ai){ // AI Turn
         int best = 9999999;
@@ -61,10 +52,10 @@ int MiniMax(char main[9][9], char freebie[9], char current[9], bool ai, int scor
                 Set_Board_Winner(main, freebie); // Update board
                 int value = Evaluate_Board(freebie, current);
                 if(value == -1000) return value; // If game is won
-                best = min(best, MiniMax(main, freebie, main[i], !ai, score+value, depth++));
+                best = min(best, MiniMax(main, freebie, main[i], !ai, score+value, depth+1));
                 // Undo the move and its effects
-                copy(&temp_main, &temp_main+81, main);
-                copy(&temp_freebie, &temp_freebie+9, freebie);
+                copy(&temp_main[0][0], &temp_main[9][9], &main[0][0]);
+                copy(&temp_freebie[0], &temp_freebie[9], &freebie[0]);
             }
         }
         return best;
@@ -77,56 +68,66 @@ int MiniMax(char main[9][9], char freebie[9], char current[9], bool ai, int scor
                 Set_Board_Winner(main, freebie); // Update board
                 int value = Evaluate_Board(freebie, current);
                 if(value == 1000) return value; // If game is won
-                best = max(best, MiniMax(main, freebie, main[i], !ai, score+value, depth++));
+                best = max(best, MiniMax(main, freebie, main[i], !ai, score+value, depth+1));
                 // Undo the move and its effects
-                copy(&temp_main, &temp_main+81, main);
-                copy(&temp_freebie, &temp_freebie+9, freebie);
+                copy(&temp_main[0][0], &temp_main[9][9], &main[0][0]);
+                copy(&temp_freebie[0], &temp_freebie[9], &freebie[0]);
             }
         }
         return best;
     }
 }
 
-int AI_Turn(char main[9][9], char freebie[9], char current[9], char mode){
-    srand(time(NULL));
-    string number;
+int AI_Turn(char main[9][9], char freebie[9], char current[9]){
+    int number[9];
     int counter;
     int best_value = 9999999;
     
     // Make a copy of current board state
     char temp_main[9][9];
     char temp_freebie[9];
-    copy(&main, &main+81, temp_main);
-    copy(&freebie, &freebie+9, temp_freebie);
-
-    
+    copy(&main[0][0], &main[9][9], &temp_main[0][0]);
+    copy(&freebie[0], &freebie[9], &temp_freebie[0]);
+        
     for(int i = 0; i < 9; i++){ // Checking all squares
         int mvalue = best_value+1;
         // Case of freebie
-        if(current == freebie)
+        if(current == freebie){
             mvalue = MiniMax(main, freebie, main[i], true, 0, 0);
+        
+        }
         // Normal Turn
         else if(current[i] == ' '){
             current[i] = 'o'; // Make a move
             Set_Board_Winner(main, freebie); // Update board
             if(Evaluate_Board(freebie, current) == -1000) return -1000; // If game is won
+            /*cout << "Main Board " << i << endl;
+            Print_Main_Board(main);
+            cout << "Temp Main Board " << i << endl;
+            Print_Main_Board(temp_main);*/
             mvalue = MiniMax(main, freebie, main[i], false, 0, 0);
             // Undo the move and its effects
-            copy(&temp_main, &temp_main+81, main);
-            copy(&temp_freebie, &temp_freebie+9, freebie);
+            copy(&temp_main[0][0], &temp_main[9][9], &main[0][0]);
+            copy(&temp_freebie[0], &temp_freebie[9], &freebie[0]);
         }
         // Replace move if it is better
         if(mvalue < best_value){
             best_value = mvalue;
-            number = i;
+            number[0] = i;
             counter = 1;
         }
         // Keep track of same score
-        if(mvalue == best_value){
-            number += ('0' + i);
-            counter++;
-        }
+        if(mvalue == best_value)
+            number[counter++] = i;
+        
+        printf("The mvalue is: %d\n", mvalue);
     }
-    // Return randomized index
-    return number[rand()%counter];
+    
+    int index = number[rand()%counter]; // Return randomized index
+    current[index] = 'o'; // Change the picked square to ai marker
+    Set_Board_Winner(main, freebie); // Update board
+
+    if(!(Check_Win(main[index]) == ' ')) return -1; // Case of freebie
+    
+    return index; // Return index for next turn
 }

@@ -7,7 +7,7 @@
 
 #include "ultimatetictactoe.h"
 
-void Reset_Values(char main[9][9], char free[9]){
+void Reset_Values(char main[9][9], char free[9], bool& turn){
     // Reset Main Board
     for(int i = 0; i < 9; i++)
         for(int j = 0; j < 9; j++)
@@ -15,6 +15,10 @@ void Reset_Values(char main[9][9], char free[9]){
     // Reset Main Board
     for(int i = 0; i < 9; i++)
         free[i] = ' ';
+    // Randomize first player
+    if(rand()%2 == 0) turn = false;
+    else turn = true;
+
 }
 
 void Set_Board_Winner(char main[9][9], char free[9]){

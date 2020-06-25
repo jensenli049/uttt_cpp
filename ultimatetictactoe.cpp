@@ -8,6 +8,7 @@
 #include "ultimatetictactoe.h"
 
 int main(){
+    srand(time(NULL));
     char main_board[9][9];
     char freebie_board[9];
     string input;
@@ -15,7 +16,7 @@ int main(){
     bool p1turn;
     
     while(true){
-        Reset_Values(main_board, freebie_board);
+        Reset_Values(main_board, freebie_board, p1turn);
         
         // Starting and setting up the game
         cout << "=========================================================================" << endl;
@@ -55,7 +56,24 @@ int main(){
         }
 
         // AI Mode
-        if(mode == 'a') ;
+        if(mode == 'a'){
+            int move = -1;
+            while(Check_Win(freebie_board) == ' '){
+                if(move == -1){
+                    if(p1turn)
+                        move = AI_Turn(main_board, freebie_board, freebie_board);
+                    else
+                        move = Player_Turn(main_board, freebie_board, freebie_board, 'x');
+                }
+                else{
+                    if(p1turn)
+                        move = AI_Turn(main_board, freebie_board, main_board[move]);
+                    else
+                        move = Player_Turn(main_board, freebie_board, main_board[move], 'x');
+                }
+                p1turn = !p1turn;
+            }
+        }
 
         // Game Over
         cout << endl;

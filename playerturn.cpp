@@ -26,7 +26,7 @@ int Player_Turn(char main[9][9], char freebie[9], char current[9], char marker){
             cin >> input;
             number = input.at(0) - '1';
         } while ((input.size() > 1) || number < 0 || number > 8 || !Check_Unused_Space(current, number));
-        current = main[number]; // change current board to one in the main board
+        current = main[number]; // Change current board to one in the main board
         cout << endl << "=========================================================================" << endl;
     }
     //Normal Turn
@@ -42,10 +42,10 @@ int Player_Turn(char main[9][9], char freebie[9], char current[9], char marker){
         number = input.at(0) - '1';
     } while ((input.size() > 1) || number < 0 || number > 8 || !Check_Unused_Space(current, number));
     
-    current[number] = marker; // change the picked square to player marker
-    Set_Board_Winner(main, freebie);
+    current[number] = marker; // Change the picked square to player marker
+    Set_Board_Winner(main, freebie); // Update board
 
-    if(!(Check_Win(main[number]) == ' ')) return -1;
+    if(!(Check_Win(main[number]) == ' ')) return -1; // Update board
 
-    return number; // return index for next turn
+    return number; // Return index for next turn
 }

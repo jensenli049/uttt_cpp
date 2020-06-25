@@ -1,8 +1,8 @@
 #include <iostream>
-#include <stdio.h>
-#include <string.h>
-#include <time.h>
-#include <stdlib.h>
+#include <cstdio>
+#include <string>
+#include <ctime>
+#include <cstdlib>
 #include <algorithm>
 
 using namespace std;
@@ -14,7 +14,7 @@ void Print_Main_Board(char main[9][9]);
 void Populate(char small[9]);
 void Unpopulate(char small[9]);
 // Set Value Functions
-void Reset_Values(char main[9][9], char free[9]);
+void Reset_Values(char main[9][9], char free[9], bool& turn);
 void Set_Board_Winner(char main[9][9], char free[9]);
 // Set Main Functions
 void Set_Main_Board(char main[9][9], char free[9]);
@@ -27,4 +27,4 @@ int Player_Turn(char main[9][9], char freebie[9], char current[9], char marker);
 // AI Turn
 int Evaluate_Board(char freebie[9], char current[9]);
 int MiniMax(char main[9][9], char freebie[9], char current[9], bool ai, int score, int depth);
-int AI_Turn(char main[9][9], char freebie[9], char current[9], char mode);
+int AI_Turn(char main[9][9], char freebie[9], char current[9]);
