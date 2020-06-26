@@ -60,8 +60,10 @@ int main(){
             int move = -1;
             while(Check_Win(freebie_board) == ' '){
                 if(move == -1){
-                    if(p1turn)
+                    if(p1turn){
                         move = AI_Turn(main_board, freebie_board, freebie_board);
+                        p1turn = !p1turn; // Makes sure ai moves to a small square and makes a move
+                    }
                     else
                         move = Player_Turn(main_board, freebie_board, freebie_board, 'x');
                 }

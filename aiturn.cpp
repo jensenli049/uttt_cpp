@@ -88,23 +88,21 @@ int AI_Turn(char main[9][9], char freebie[9], char current[9]){
     char temp_freebie[9];
     copy(&main[0][0], &main[9][9], &temp_main[0][0]);
     copy(&freebie[0], &freebie[9], &temp_freebie[0]);
-        
+    
+    if(current == freebie) cout << endl << "Freebie:" << endl;
+    else cout << endl << "Normal Turn:" << endl;
+
     for(int i = 0; i < 9; i++){ // Checking all squares
         int mvalue = best_value+1;
         // Case of freebie
-        if(current == freebie){
+        if(current == freebie)
             mvalue = MiniMax(main, freebie, main[i], true, 0, 0);
         
-        }
         // Normal Turn
         else if(current[i] == ' '){
             current[i] = 'o'; // Make a move
             Set_Board_Winner(main, freebie); // Update board
             if(Evaluate_Board(freebie, current) == -1000) return -1000; // If game is won
-            /*cout << "Main Board " << i << endl;
-            Print_Main_Board(main);
-            cout << "Temp Main Board " << i << endl;
-            Print_Main_Board(temp_main);*/
             mvalue = MiniMax(main, freebie, main[i], false, 0, 0);
             // Undo the move and its effects
             copy(&temp_main[0][0], &temp_main[9][9], &main[0][0]);
@@ -120,13 +118,14 @@ int AI_Turn(char main[9][9], char freebie[9], char current[9]){
         if(mvalue == best_value)
             number[counter++] = i;
         
-        printf("The mvalue is: %d\n", mvalue);
+        printf("\tThe mvalue for square %d is: %d\n", i+1, mvalue);
     }
     
     int index = number[rand()%counter]; // Return randomized index
-    current[index] = 'o'; // Change the picked square to ai marker
-    Set_Board_Winner(main, freebie); // Update board
-
+    if(current != freebie){ // Do only on a normal turn
+        current[index] = 'o'; // Change the picked square to ai marker
+        Set_Board_Winner(main, freebie); // Update board
+    }
     if(!(Check_Win(main[index]) == ' ')) return -1; // Case of freebie
     
     return index; // Return index for next turn
