@@ -28,7 +28,7 @@ int MiniMax(char main[9][9], char freebie[9], char current[9], bool ai, int scor
     // Limit search depth
     if(depth > 4)
         return score;
-    
+     
     // Make a copy of current board state
     char temp_main[9][9];
     char temp_freebie[9];
@@ -62,7 +62,7 @@ int MiniMax(char main[9][9], char freebie[9], char current[9], bool ai, int scor
                 copy(&temp_freebie[0], &temp_freebie[9], &freebie[0]);
             }
         }
-        return best;
+        return min(best, score);
     }
     else{ // Player Turn
         int best = -9999999;
@@ -80,7 +80,7 @@ int MiniMax(char main[9][9], char freebie[9], char current[9], bool ai, int scor
                 copy(&temp_freebie[0], &temp_freebie[9], &freebie[0]);
             }
         }
-        return best;
+        return max(best, score);
     }
 }
 
@@ -102,11 +102,11 @@ int AI_Turn(char main[9][9], char freebie[9], char current[9]){
         int mvalue = best_value+1;
         
         // Case of freebie
-        if(current == freebie)
+        if(current == freebie && freebie[i] == ' ')
             mvalue = MiniMax(main, freebie, main[i], true, 0, 0);
 
         // Normal Turn
-        else if(current[i] == ' '){
+        else if(current != freebie && current[i] == ' '){
             current[i] = 'o'; // Make a move
             Set_Board_Winner(main, freebie); // Update board
             if(Evaluate_Board(freebie, current) == -1000) return -1000; // If game is won
